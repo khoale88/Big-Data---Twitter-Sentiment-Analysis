@@ -6,13 +6,10 @@ library("ggplot2")
 
 setup_twitter_oauth('bROy3QOsXzlIEA46VERbsEC0Q', 'trzN0KCB4bPUxgUSAYu5VF1RuwNEQuv4Blvw4ur7DRIIB99h3Q', access_token=NULL, access_secret=NULL)
 
-search.string <- "#trump"
-no.of.tweets <- 100
+searchTerm <- "#fuckbuddy"
 
-tweets <- searchTwitter(search.string, n=no.of.tweets,lang="en")
-tweets
 search <- function(searchterm){
-list <- searchTwitter(searchterm, n=1500)
+list <- searchTwitter(searchterm, n=100)
 df <- twListToDF(list)
 df <- df[, order(names(df))]
 df$created <- strftime(df$created, '%Y-%m-%d')
@@ -58,15 +55,16 @@ stat <- scores
 stat$created <- stack$created
 stat$created <- as.Date(stat$created)
 stat <- mutate(stat, tweet=ifelse(stat$score > 0, 'positive', ifelse(stat$score < 0, 'negative', 'neutral')))
+
 by.tweet <- group_by(stat, tweet, created)
-by.tweet <- summarise(by.tweet, number=n())
-write.csv(by.tweet, file=paste(searchterm, '_opin.csv'), row.names=TRUE)
-#chart
-ggplot(by.tweet, aes(created, number)) + geom_line(aes(group=tweet, color=tweet), size=2) +
+by.tweet <- summarise(by.tweet, count=n())
+ggplot(by.tweet, aes(created, count)) + geom_line(aes(group=tweet, color=tweet), size=2) +
   geom_point(aes(group=tweet, color=tweet), size=4) +
   theme(text = element_text(size=18), axis.text.x = element_text(angle=90, vjust=1)) +
-  #stat_summary(fun.y = 'sum', fun.ymin='sum', fun.ymax='sum', colour = 'yellow', size=2, geom = 'line') +
-  ggtitle(searchterm)
-ggsave(file=paste(searchterm, '_plot.jpeg'))
+  stat_summary(fun.y = 'sum', fun.ymin='sum', fun.ymax='sum', colour = 'yellow', size=2, geom = 'line') +
+ggtitle(searchterm)
+
 }
-search("Powerlifting") #enter keyword
+
+search(searchTerm) #enter keyword
+
