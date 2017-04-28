@@ -32,7 +32,7 @@ val accessTokenSecret = "m8NeiokrrSUFS5rEPWRFDhvHeHaImLCQPs40rhI6NqrEu"
 configureTwitterCredentials(apiKey, apiSecret, accessToken, accessTokenSecret)
 
 import org.apache.spark.streaming.twitter._
-val ssc = new StreamingContext(sc, Seconds(2))
+val ssc = new StreamingContext(sc, Seconds(1))
 val tweets = TwitterUtils.createStream(ssc, None)
 val twt = tweets.window(Seconds(60))
 

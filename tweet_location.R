@@ -1,4 +1,10 @@
 
+# Install and Activate Packages
+install.packages("streamR", "RCurl", "ROAuth", "RJSONIO")
+library(streamR)
+library(RCurl)
+library(RJSONIO)
+library(stringr)
 library('dismo')
 library(devtools)
 library(twitteR)
