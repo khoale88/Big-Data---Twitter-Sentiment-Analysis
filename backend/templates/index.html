@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Tenant1</title>
+    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
+    <link href="../static/login.css" rel="stylesheet">
+    <script src="{{ url_for('static', filename = 'jquery-3.2.1.min.js') }}"></script>
+</head>
+
+<body>
+    <div style="width:1200px;padding-right: 15px;padding-left: 15px;margin-right: auto;margin-left: auto;">
+        <div class="header">
+            <nav>
+                <ul class="nav nav-pills pull-right">
+                    <li role="presentation"><a href="">Home</a></li>
+                    <li role="presentation" class="active"><a href="">Sign In</a></li>
+                </ul>
+            </nav>
+            <h3 class="text-muted">Multi Tenant</h3>
+        </div>
+
+        <div class="jumbotron">
+            <form class="form-signin" method="post" enctype="multipart/form-data">
+                <textarea name="textcode" id="searchTerm" class="form-control" placeholder="paste code" rows="10" required autofocus></textarea>
+                <br>
+                <button id="btnSubmit" class="btn btn-lg btn-primary btn-block" type="button">Submit</button>
+            </form>
+        </div>
+
+        <div class="jumbotron" id="divImage" style="display:none;">
+            <img id="imgDiagram" />
+        </div>
+
+        <div class="jumbotron">
+            <textarea rows="4" cols="50" type="textarea" name="comment" id="comment" class="form-control" placeholder="Comment" style="height:90px;width:500px;"></textarea>
+            <br>
+            <select>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                    <option value="D">D</option>
+                    <option value="F">F</option>
+                </select>
+            <br>
+            <button id="btnSubmit1" class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
+        </div>
+
+        <footer class="footer">
+            <p>&copy; Azhad 2017</p>
+        </footer>
+
+    </div>
+    <script>
+        $(document).ready(function() {
+            var host = location.protocol + '//' + location.host;
+            $(document.body).on('click', '#btnSubmit', function() {
+                $.ajax({
+                    type: 'POST',
+                    url: "{{url_for('search')}}",
+                    contentType: 'application/json;charset=UTF-8',
+                    data: JSON.stringify({
+                        "searchTerm": $("#searchTerm").val()
+                    }, null, '\t'),
+                    dataType: "json",
+                    success: function(data) {
+                        if (data["link"]) {
+                            console.log(data["link"])
+                            d = new Date();
+                            $("#imgDiagram").prop("src", data["link"] + "?" + d.getTime())
+                            $("#divImage").show();
+                        } else {
+                            $("#divImage").hide();
+                            // window.location.replace(data["redirect"]);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

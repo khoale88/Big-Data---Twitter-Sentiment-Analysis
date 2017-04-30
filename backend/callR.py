@@ -1,4 +1,4 @@
 import subprocess
 
-def callR(input):
-    subprocess.call(["Rscript","sample_R.r",input])
+def callR(script_path, input):
+    subprocess.call(["Rscript", script_path, input])
