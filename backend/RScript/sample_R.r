@@ -14,7 +14,7 @@ prd$lci <- err$fit - 1.96 * err$se.fit
 prd$fit <- err$fit
 prd$uci <- err$fit + 1.96 * err$se.fit
 
-png(filename="sampleOutput.png")
+png(filename="output.png")
 
 ggplot(prd, aes(x = hp, y = fit)) +
   ggtitle(searchTerm)+
