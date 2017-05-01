@@ -20,6 +20,10 @@ search <- function(searchterm)
   stack <- rbind(stack, df)
   stack <- subset(stack, !duplicated(stack$text))
   write.csv(stack, file=paste(searchterm, '_stack.csv'), row.names=F)
+  pos <- scan('positive-words.txt', what='character', comment.char=';') #folder with positive dictionary
+  neg <- scan('negative-words.txt', what='character', comment.char=';') #folder with negative dictionary
+  pos.words <- c(pos, 'upgrade')
+  neg.words <- c(neg, 'wtf', 'wait', 'waiting', 'epicfail')
   #evaluation tweets function
   score.sentiment <- function(sentences, pos.words, neg.words, .progress='none')
   {
@@ -43,10 +47,7 @@ search <- function(searchterm)
     scores.df <- data.frame(score=scores, text=sentences)
     return(scores.df)
   }
-  pos <- scan('positive-words.txt', what='character', comment.char=';') #folder with positive dictionary
-  neg <- scan('negative-words.txt', what='character', comment.char=';') #folder with negative dictionary
-  pos.words <- c(pos, 'upgrade')
-  neg.words <- c(neg, 'wtf', 'wait', 'waiting', 'epicfail')
+
   Dataset <- stack
   Dataset$text <- as.factor(Dataset$text)
   scores <- score.sentiment(Dataset$text, pos.words, neg.words, .progress='text')
