@@ -1,6 +1,6 @@
 import subprocess
 
-def call_rscript(script_path, *args):
-    """call an R script from given script_path with args"""
+def callR(script_path, *args):
+    """run r script with arbitrary numbers of arguments"""
 
     subprocess.call(["Rscript", script_path] + [str(arg) for arg in args])

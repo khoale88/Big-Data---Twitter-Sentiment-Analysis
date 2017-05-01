@@ -1,20 +1,25 @@
 
 # PART 1: Declare Twitter API Credentials & Create Handshake
 library(ROAuth)
+library("twitteR")
+library(RCurl) 
+library(streamR)
+options(RCurlOptions = list(cainfo = system.file("CurlSSL", "cacert.pem", package = "RCurl")))
 requestURL <- "https://api.twitter.com/oauth/request_token"
-accessURL <- "https://api.twitter.com/oauth/access_token"
-authURL <- "https://api.twitter.com/oauth/authorize"
-consumerKey <- "bROy3QOsXzlIEA46VERbsEC0Q" # From dev.twitter.com
-consumerSecret <- "trzN0KCB4bPUxgUSAYu5VF1RuwNEQuv4Blvw4ur7DRIIB99h3Q" # From dev.twitter.com
+accessURL <- "http://api.twitter.com/oauth/access_token"
+authURL <- "http://api.twitter.com/oauth/authorize"
+consumerKey <- "TPtZR63Mzmbj87BTrMpOdsyRb" # From dev.twitter.com
+consumerSecret <- "IucDHiVwFr7T9APxEzBjBMK3b2FqxCi2ObYBKHFs3c1wgeS8oA" # From dev.twitter.com
+setup_twitter_oauth('TPtZR63Mzmbj87BTrMpOdsyRb', 'IucDHiVwFr7T9APxEzBjBMK3b2FqxCi2ObYBKHFs3c1wgeS8oA', access_token=NULL, access_secret=NULL)
 
-my_oauth <- OAuthFactory$new(consumerKey = "bROy3QOsXzlIEA46VERbsEC0Q",
-                             consumerSecret = "trzN0KCB4bPUxgUSAYu5VF1RuwNEQuv4Blvw4ur7DRIIB99h3Q",
+my_oauth <- OAuthFactory$new(consumerKey = "TPtZR63Mzmbj87BTrMpOdsyRb",
+                             consumerSecret = "IucDHiVwFr7T9APxEzBjBMK3b2FqxCi2ObYBKHFs3c1wgeS8oA",
                              requestURL = requestURL,
                              accessURL = accessURL,
                              authURL = authURL)
 my_oauth$handshake(cainfo = system.file("CurlSSL", "cacert.pem", package = "RCurl"))
 
-### STOP HERE!!! ###
+### STOP HERE!!! ###c
 
 # PART 2: Save the my_oauth data to an .Rdata file
 save(my_oauth, file = "my_oauth.Rdata")
