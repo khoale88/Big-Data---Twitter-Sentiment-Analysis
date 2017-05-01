@@ -18,8 +18,8 @@ library(maptools)
 library(maps)
 setup_twitter_oauth('bROy3QOsXzlIEA46VERbsEC0Q', 'trzN0KCB4bPUxgUSAYu5VF1RuwNEQuv4Blvw4ur7DRIIB99h3Q', access_token=NULL, access_secret=NULL)
 
-searchTerm <- "#death"
-searchResults <- searchTwitter(searchTerm, n = 500)  # Gather Tweets 
+searchTerm <- "#dead"
+searchResults <- searchTwitter(searchTerm, n = 50)  # Gather Tweets 
 tweetFrame <- twListToDF(searchResults)  # Convert to a nice dF
 tweetText <- tweetFrame$text
 userInfo <- lookupUsers(tweetFrame$screenName)  # Batch lookup of user info
