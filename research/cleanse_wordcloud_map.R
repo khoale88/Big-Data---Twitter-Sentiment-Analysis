@@ -18,13 +18,13 @@ setup_twitter_oauth(api_key,api_secret, access_token, access_token_secret)
 
 #searchTerm <- "StarWarsDay"
 args = commandArgs(trailingOnly=TRUE)
-#searchTerm <- "Climate March"
+#searchTerm <- "AHCA"
 if (length(args)!=0) {
   # default output file
   searchTerm <- args[1]
 }
 searchTerm
-no_tweets <- 30
+no_tweets <- 100
 #Getting tweets
 tweets <- searchTwitter(searchTerm, no_tweets, lang='en', resultType="recent") #can remove resultType=recent
 tweets #to see the tweets
@@ -69,7 +69,7 @@ tweet_clean <- tm_map(tweet_clean, removeWords, stopwords("english"))
 tweet_clean <- tm_map(tweet_clean, removeNumbers)
 tweet_clean <- tm_map(tweet_clean, stripWhitespace)
 
-words_count <- sapply(gregexpr("\\W+", searchTerm), length) + 1
+words_count <- sapply(gregexpr("\\W+", searchTerm), length)
 words_count
 search_words <- tolower(searchTerm)
 if (words_count < 2) {
@@ -148,6 +148,15 @@ library(RJSONIO)
 library(devtools)
 library(maptools)
 library(maps)
+
+library('dismo')
+library('maps')
+library('ggplot2')
+library('XML')
+library('data.table')
+library('mapproj')
+library("ggmap")
+
 
 tweetFrame <- twListToDF(tweets)  # Convert to a nice dF
 tweetText <- tweetFrame$text
