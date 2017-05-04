@@ -18,7 +18,7 @@ setup_twitter_oauth(api_key,api_secret, access_token, access_token_secret)
 
 #searchTerm <- "Climate March"
 args = commandArgs(trailingOnly=TRUE)
-searchTerm <- "Climate March"
+#searchTerm <- "Climate March"
 if (length(args)!=0) {
   # default output file
   searchTerm <- args[1]
@@ -52,7 +52,7 @@ clean_tweet = gsub('\"', "", clean_tweet)
 clean_tweet = gsub("[^0-9A-Za-z#///' ]", "", clean_tweet) #Removing any non-english character
 clean_tweet
 write.csv(clean_tweet, file='/Users/Kandarp/Desktop/tweets_cleansed.csv', col.names=F, row.names=F)
-
+#####################################################################################################
 
 #convert to documents
 tweet_corpus <- Corpus(VectorSource(clean_tweet))
@@ -114,3 +114,29 @@ if (words_count < 2) {
 wordcloud(tweet_clean, random.order = F, max.words = 40, scale=c(3,0.5), colors = rainbow(50))
 
 #dev.off()
+#####################################################################################################
+
+#to get top worldwide trends
+world <- getTrends(1)
+world #to see top worldwide trends
+trend <- world$name
+trend
+trend = gsub("[^0-9A-Za-z#///' ]", "", trend)
+len_trend <- length(trend)
+#nchar(trend[9])
+#trend
+j <- 1
+trend_new <- NULL
+#trend_new <- sapply(trend_new.names,function(x) NULL)
+for(i in 1:len_trend) 
+{
+  if (nchar(trend[i]) > 2) {
+    trend_new[j] <- trend[i]
+    j <- j+ 1
+  }
+}
+
+#trend_new
+
+write.csv(trend_new, file='/Users/Kandarp/Desktop/tweets_topTrend.csv', row.names=F)
+#####################################################################################################
