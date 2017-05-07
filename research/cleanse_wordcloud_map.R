@@ -1,0 +1,229 @@
+#Configure twitter API
+api_key <- "AcJYBgHWc7FhEX0Ls4SsVBTkA"
+api_secret <- "r4i8I6kGgm5I0Uyc9R9JHVste4lrGWtajP0CLbZjNif8P3AoFm"
+access_token <- "4162930993-QsTezz6yeseB5AxEaxvu6aSz5ha9m1jVL9B2NUG"
+access_token_secret <- "4Y71MZrnCI20GSDlWpWPYDYEfstvvWWo2j1TPJvbLsNPY"
+
+#install.prackages("tm") #textmining package
+#install.packages("wordcloud") #for visuals
+#to get twitter rate limit - getCurRateLimitInfo()
+
+library("wordcloud")
+library("tm")
+library(stringr) #to count words
+
+#Load Library
+library("twitteR")
+setup_twitter_oauth(api_key,api_secret, access_token, access_token_secret)
+
+#searchTerm <- "StarWarsDay"
+args = commandArgs(trailingOnly=TRUE)
+#searchTerm <- "AHCA"
+if (length(args)!=0) {
+  # default output file
+  searchTerm <- args[1]
+}
+searchTerm
+no_tweets <- 100
+#Getting tweets
+tweets <- searchTwitter(searchTerm, no_tweets, lang='en', resultType="recent") #can remove resultType=recent
+tweets #to see the tweets
+
+#class(tweets) #to know class of tweets #output = list
+tweets_text <- sapply(tweets, function(x) x$getText()) #to get only text
+tweets_text
+
+clean_tweet = gsub("&amp", "", tweets_text)
+clean_tweet = gsub("\\n", " ", clean_tweet)
+clean_tweet = gsub("[[:digit:]]", "", clean_tweet) #removes digits
+clean_tweet = gsub('http\\S+\\s*', '', clean_tweet)
+#clean_tweet = gsub(" ?(f|ht)(tp)(s?)(://)(.*)[.|/](.*)", "", clean_tweet)
+clean_tweet = gsub("(RT|via)((?:\\b\\W*@\\w+)+)", "", clean_tweet)
+clean_tweet = gsub("|", "", clean_tweet)
+clean_tweet = gsub("?", "", clean_tweet)
+#clean_tweet = gsub("http\\w+", "", clean_tweet)
+#clean_tweet = gsub("https\\w+", "", clean_tweet)
+clean_tweet = gsub("[ \t]{2,}", "", clean_tweet)
+clean_tweet = gsub("^\\s+|\\s+$", "", clean_tweet)
+
+clean_tweet = gsub("@\\w+", "", clean_tweet)
+clean_tweet = gsub(":", "", clean_tweet)
+clean_tweet = gsub("/", "", clean_tweet)
+clean_tweet = gsub('\"', "", clean_tweet)
+clean_tweet = gsub("[^0-9A-Za-z#///' ]", "", clean_tweet) #Removing any non-english character
+clean_tweet
+write.csv(clean_tweet, file='D:/297 Big data/BigDataProject/tweets_cleansed.csv', row.names=F)
+#####################################################################################################
+
+#convert to documents
+tweet_corpus <- Corpus(VectorSource(clean_tweet))
+#tweet_corpus <- Corpus(VectorSource(tweets_text))
+tweet_corpus
+
+inspect(tweet_corpus[1]) #to look at first document 
+
+#To clean tweets
+tweet_clean <- tm_map(tweet_corpus, removePunctuation)
+tweet_clean <- tm_map(tweet_clean, content_transformer(tolower))
+tweet_clean <- tm_map(tweet_clean, removeWords, stopwords("english"))
+tweet_clean <- tm_map(tweet_clean, removeNumbers)
+tweet_clean <- tm_map(tweet_clean, stripWhitespace)
+
+words_count <- sapply(gregexpr("\\W+", searchTerm), length)
+words_count
+search_words <- tolower(searchTerm)
+if (words_count < 2) {
+  print("1 word")
+  word1 <- search_words
+  print(word1)
+  tweet_clean <- tm_map(tweet_clean, removeWords, c(word1))
+} else if (words_count < 3) {
+  print("2 words")
+  word1 <- word(search_words,-2)
+  word2 <- word(search_words,-1)
+  word3 <- paste(word1,word2, sep = "")
+  cat(word1, word2, word3)
+  tweet_clean <- tm_map(tweet_clean, removeWords, c(word1, word2, word3))
+}else if (words_count < 4) {
+  print("3 words")
+  word1 <- word(search_words,-3)
+  word2 <- word(search_words,-2)
+  word3 <- word(search_words,-1)
+  word4 <- paste(word1,word2, sep = "")
+  word5 <- paste(word2,word3, sep = "")
+  cat(word1, word2, word3, word4, word5)
+  tweet_clean <- tm_map(tweet_clean, removeWords, c(word1, word2, word3, word4, word5))
+} else {
+  print("3 words")
+  word1 <- word(search_words,-4)
+  word2 <- word(search_words,-3)
+  word3 <- word(search_words,-2)
+  word4 <- word(search_words,-1)
+  word5 <- paste(word1,word2, sep = "")
+  word6 <- paste(word2,word3, sep = "")
+  word7 <- paste(word3,word4, sep = "")
+  cat(word1, word2, word3, word4, word5, word6, word7)
+  tweet_clean <- tm_map(tweet_clean, removeWords, c(word1, word2, word3, word4, word5, word6, word7))
+}
+
+
+#tweet_clean <- tm_map(tweet_clean, removeWords, c("climate", "march", "climatemarch", "amp"))
+
+png(filename="D:/297 Big data/BigDataProject/wordCloud.png")
+
+#wordCloud
+wordcloud(tweet_clean, random.order = F, max.words = 40, scale=c(3,0.5), colors = rainbow(50))
+
+dev.off()
+#####################################################################################################
+
+#to get top worldwide trends
+world <- getTrends(1)
+world #to see top worldwide trends
+trend <- world$name
+trend
+trend = gsub("[^0-9A-Za-z#///' ]", "", trend)
+len_trend <- length(trend)
+#nchar(trend[9])
+#trend
+j <- 1
+trend_new <- NULL
+#trend_new <- sapply(trend_new.names,function(x) NULL)
+for(i in 1:len_trend) 
+{
+  if (nchar(trend[i]) > 2) {
+    trend_new[j] <- trend[i]
+    j <- j+ 1
+  }
+}
+
+#trend_new
+
+write.csv(trend_new, file='D:/297 Big data/BigDataProject/tweets_topTrend.csv', row.names=F)
+#####################################################################################################
+
+library(streamR)
+library(RCurl)
+library(RJSONIO)
+library(devtools)
+library(maptools)
+library(maps)
+
+library('dismo')
+library('maps')
+library('ggplot2')
+library('XML')
+library('data.table')
+library('mapproj')
+library("ggmap")
+
+
+tweetFrame <- twListToDF(tweets)  # Convert to a nice dF
+tweetText <- tweetFrame$text
+userInfo <- lookupUsers(tweetFrame$screenName)  # Batch lookup of user info
+userFrame <- twListToDF(userInfo)  # Convert to a nice dF
+locations <- geocode(userFrame$location[!userFrame$location %in% ""])
+tweet_loc.x <- locations$lon
+tweet_loc.y <- locations$lat
+#tweet_loc.x
+
+sapply(locations, class)
+pos <- scan('D:/297 Big data/BigDataProject/positive-words.txt', what='character', comment.char=';') #folder with positive dictionary
+neg <- scan('D:/297 Big data/BigDataProject/negative-words.txt', what='character', comment.char=';') #folder with negative dictionary
+pos.words <- c(pos, 'upgrade')
+neg.words <- c(neg, 'wtf', 'wait', 'waiting', 'epicfail')
+#evaluation tweets function
+score.sentiment <- function(sentences, pos.words, neg.words, .progress='none')
+{
+  require(plyr)
+  require(stringr)
+  scores <- laply(sentences, function(sentence, pos.words, neg.words){
+    sentence <- gsub('[[:punct:]]', "", sentence)
+    sentence <- gsub('[[:cntrl:]]', "", sentence)
+    sentence <- gsub('\\d+', "", sentence)
+    sentence <- str_replace_all(sentence,"[^[:graph:]]", " ")
+    sentence <- tolower(sentence)
+    word.list <- str_split(sentence, '\\s+')
+    words <- unlist(word.list)
+    pos.matches <- match(words, pos.words)
+    neg.matches <- match(words, neg.words)
+    pos.matches <- !is.na(pos.matches)
+    neg.matches <- !is.na(neg.matches)
+    score <- sum(pos.matches) - sum(neg.matches)
+    return(score)
+  }, pos.words, neg.words, .progress=.progress)
+  scores.df <- data.frame(score=scores, text=sentences)
+  return(scores.df)
+}
+
+
+tweetScores <- score.sentiment(tweetText, pos.words, neg.words, .progress='text')
+tweetScores <- mutate(tweetScores, sentiment=ifelse(tweetScores$score > 0, 'positive', ifelse(tweetScores$score < 0, 'negative', 'neutral')))
+tweet_loc.sentiment <- tweetScores$sentiment
+tweetFrame <- cbind(tweetFrame$screenName, tweet_loc.sentiment)
+#tweetFrame
+
+
+map("world", fill=TRUE, col="white", bg="lightblue", ylim=c(-60, 90), mar=c(0,0,0,0))
+points(tweet_loc.y,tweet_loc.x, col="red", pch=16)
+mp <- NULL
+mapWorld <- borders("world", colour="gray50", fill="gray50") # create a layer of borders
+mp <- ggplot() +   mapWorld
+
+tweet_loc.x <- na.omit(tweet_loc.x)
+tweet_loc.y <- na.omit(tweet_loc.y)
+tweet_loc.sentiment <- as.factor(tweet_loc.sentiment)
+tweet_loc.sentiment <- na.omit(tweet_loc.sentiment)
+#tweet_loc.sentiment
+
+#Now Layer the cities on top
+tweetData <- cbind(tweet_loc.x,tweet_loc.y,tweet_loc.sentiment)
+tweetData <- data.frame(tweetData)
+tweetData <- mutate(tweetData, sentiment=ifelse(tweetData$tweet_loc.sentiment > 0, 'positive', ifelse(tweetData$tweet_loc.sentiment < 0, 'negative', 'neutral')))
+#tweetData
+
+mp <- mp + geom_point(aes(x=tweetData$tweet_loc.x, y=tweetData$tweet_loc.y, colour=factor(tweetScores$sentiment)), size=3) 
+
+png(filename="D:/297 Big data/BigDataProject/wordmap.png")
+mp
+dev.off()
