@@ -4528,3 +4528,23 @@ WHERE (0 = 1)
 17/05/08 15:10:19 INFO TaskSchedulerImpl: Removed TaskSet 76.0, whose tasks have all completed, from pool 
 17/05/08 15:10:19 INFO DAGScheduler: ResultStage 76 (collect at utils.scala:195) finished in 0.002 s
 17/05/08 15:10:19 INFO DAGScheduler: Job 57 finished: collect at utils.scala:195, took 0.013477 s
+17/05/08 15:11:19 INFO BlockManagerInfo: Removed broadcast_101_piece0 on localhost:53202 in memory (size: 1224.0 B, free: 510.8 MB)
+17/05/08 15:11:19 INFO ContextCleaner: Cleaned accumulator 246
+17/05/08 15:11:19 INFO BlockManagerInfo: Removed broadcast_100_piece0 on localhost:53202 in memory (size: 4.7 KB, free: 510.8 MB)
+17/05/08 15:11:19 INFO ContextCleaner: Cleaned accumulator 245
+17/05/08 15:11:19 INFO BlockManagerInfo: Removed broadcast_99_piece0 on localhost:53202 in memory (size: 11.2 KB, free: 510.8 MB)
+17/05/08 15:11:19 INFO ContextCleaner: Cleaned accumulator 244
+17/05/08 15:11:19 INFO ContextCleaner: Cleaned shuffle 18
+17/05/08 15:11:19 INFO BlockManagerInfo: Removed broadcast_98_piece0 on localhost:53202 in memory (size: 4.6 KB, free: 510.8 MB)
+17/05/08 15:11:19 INFO ContextCleaner: Cleaned accumulator 235
+17/05/08 15:11:19 INFO BlockManagerInfo: Removed broadcast_97_piece0 on localhost:53202 in memory (size: 11.1 KB, free: 510.8 MB)
+17/05/08 15:11:19 INFO ContextCleaner: Cleaned accumulator 234
+17/05/08 15:11:19 INFO ContextCleaner: Cleaned shuffle 17
+17/05/08 15:11:19 INFO ContextCleaner: Cleaned accumulator 233
+17/05/08 15:11:19 INFO ContextCleaner: Cleaned accumulator 232
+17/05/08 15:11:19 INFO ContextCleaner: Cleaned accumulator 231
+17/05/08 15:11:19 INFO ContextCleaner: Cleaned accumulator 230
+17/05/08 15:11:19 INFO ContextCleaner: Cleaned accumulator 229
+17/05/08 15:11:19 INFO ContextCleaner: Cleaned accumulator 228
+17/05/08 15:11:19 INFO ContextCleaner: Cleaned accumulator 227
+17/05/08 15:11:19 INFO ContextCleaner: Cleaned accumulator 226
