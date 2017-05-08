@@ -6,9 +6,17 @@ import helper_func as hf
 
 app = Flask(__name__)
 
+app.config["SERVER_HOST"] = "0.0.0.0"
+app.config["SERVER_PORT"] = 5000
 app.config["RSCRIPT_FOLDER"] = "rscript/twitter_Sentiment_Analysis.R"
 app.config["OUTPUT_FOLDER"] = "static/"
+
 app.config["STATIC_EXCLUSION"] = ["jquery-3.2.1.min.js", "style.css"]
+app.config["TWEET_TREND_FILENAME"] = "tweets_topTrend.csv"
+app.config["LOCATION_MAP_FILENAME"] = "loc.png"
+app.config["PIE_CHAR_FILENAME"] = "pie.png"
+app.config["WORD_CLOUD_FILENAME"] = "wordCloud.png"
+
 
 CURRENT_THREAD = None
 
@@ -18,9 +26,10 @@ def search():
 
     search_term = request.json["searchTerm"]
 
-    # replace the rest of this method with
+    ## replace the rest of this method with just one following line of code
+    ## to integrating with web UI with different tabs
     # return search_with_term(search_term)
-    # to integrating with web UI with different tabs
+
 
     #delete all file b4 generate new files
     exclude = ["jquery-3.2.1.min.js", "style.css"]
@@ -79,7 +88,7 @@ def search_with_term(search_term):
         return Response(status=204)
 
 @app.route('/topTrends', methods=['GET'])
-def get_trends():
+def get_tweet_trends():
     """ 200 - succesful with return
         202 - processing
         404 - start a search
@@ -89,16 +98,14 @@ def get_trends():
         #need to start at least one search
         return Response(status=404)
 
-    filename = "tweets_topTrend.csv"
     filename = os.path.join(app.config["OUTPUT_FOLDER"],
-                            filename)
+                            app.config["TWEET_TREND_FILENAME"])
     if os.path.exists(filename):
     #if the file exist, return the trend with status code = 200
         trends = hf.read_tweets_trend(filename)
-        output = {"topTrends"  : trends,
-                  "searchTerm" : CURRENT_THREAD.getName()}
         return Response(headers=[("Content-Type", "json/application")],
-                        response=json.dumps(output),
+                        response=json.dumps({"topTrends"  : trends,
+                                             "searchTerm" : CURRENT_THREAD.getName()}),
                         status=200)
     if CURRENT_THREAD.isAlive():
         #processing, please wait
@@ -119,15 +126,13 @@ def get_loc_map():
         #need to start at least one search
         return Response(status=404)
 
-    filename = "loc.png"
     filename = os.path.join(app.config["OUTPUT_FOLDER"],
-                            filename)
+                            app.config["LOCATION_MAP_FILENAME"])
     if os.path.exists(filename):
     #if the file exist, return the path with status code = 200
-        output = {"locPNG"     : filename,
-                  "searchTerm" : CURRENT_THREAD.getName()}
         return Response(headers=[("Content-Type", "json/application")],
-                        response=json.dumps(output),
+                        response=json.dumps({"locPNG"     : filename,
+                                             "searchTerm" : CURRENT_THREAD.getName()}),
                         status=200)
     if CURRENT_THREAD.isAlive():
         #processing, please wait, file not ready
@@ -147,15 +152,13 @@ def get_pie_chart():
         #need to start at least one search
         return Response(status=404)
 
-    filename = "pie.png"
     filename = os.path.join(app.config["OUTPUT_FOLDER"],
-                            filename)
+                            app.config["PIE_CHAR_FILENAME"])
     if os.path.exists(filename):
     #if the file exist, return the path with status code = 200
-        output = {"piePNG"     : filename,
-                  "searchTerm" : CURRENT_THREAD.getName()}
         return Response(headers=[("Content-Type", "json/application")],
-                        response=json.dumps(output),
+                        response=json.dumps({"piePNG"     : filename,
+                                             "searchTerm" : CURRENT_THREAD.getName()}),
                         status=200)
     elif CURRENT_THREAD.isAlive():
         #processing, please wait, file not ready
@@ -175,15 +178,13 @@ def get_word_cloud():
         #need to start at least one search
         return Response(status=404)
 
-    filename = "wordCloud.png"
     filename = os.path.join(app.config["OUTPUT_FOLDER"],
-                            filename)
+                            app.config["WORD_CLOUD_FILENAME"])
     if os.path.exists(filename):
     #if the file exist, return the path with status code = 200
-        output = {"wordCloudPNG" : filename,
-                  "searchTerm"   : CURRENT_THREAD.getName()}
         return Response(headers=[("Content-Type", "json/application")],
-                        response=json.dumps(output),
+                        response=json.dumps({"wordCloudPNG" : filename,
+                                             "searchTerm"   : CURRENT_THREAD.getName()}),
                         status=200)
 
     elif CURRENT_THREAD.isAlive():
@@ -199,5 +200,7 @@ def index():
     return render_template("index.html")
 
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True,
+            host=app.config["SERVER_HOST"],
+            port=app.config["SERVER_PORT"])
 
