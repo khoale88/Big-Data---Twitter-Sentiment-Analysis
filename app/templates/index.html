@@ -32,12 +32,12 @@
 
         <div class="jumbotron" id="divImage" style="display:none;">
             <img id="locPNG" />
-            <img id="barPNG" />
             <img id="piePNG" />
+            <img id="wordCloudPNG" />
         </div>
 
         <footer class="footer">
-            <p>&copy; PHAK 2017</p>
+            <p>&copy; KAPE 2017</p>
         </footer>
 
     </div>
@@ -58,8 +58,8 @@
                             console.log(data["pics"])
                             d = new Date();
                             $("#locPNG").prop("src", data["pics"]["locPNG"] + "?" + d.getTime())
-                            $("#barPNG").prop("src", data["pics"]["barPNG"] + "?" + d.getTime())
                             $("#piePNG").prop("src", data["pics"]["piePNG"] + "?" + d.getTime())
+                            $("#wordCloudPNG").prop("src", data["pics"]["wordCloudPNG"] + "?" + d.getTime())
                             $("#divImage").show();
                         } else {
                             $("#divImage").hide();
