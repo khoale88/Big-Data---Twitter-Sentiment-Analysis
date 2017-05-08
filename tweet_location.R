@@ -46,7 +46,7 @@ score.sentiment <- function(sentences, pos.words, neg.words, .progress='none'){
 
 
 
-searchTerm <- "#dead"
+searchTerm <- "#Gucci"
 searchResults <- searchTwitter(searchTerm, n = 50)  # Gather Tweets 
 tweetFrame <- twListToDF(searchResults)  # Convert to a nice dF
 tweetText <- tweetFrame$text
@@ -93,5 +93,13 @@ png("image.png", width = 800, height = 600)
 mp
 dev.off()
 
-
-
+bar <- ggplot(data=tweetScores, aes(x = factor(1), fill = factor(tweet.sentiment))) + geom_bar(width = 1)
+pie <- bar + coord_polar(theta = "y")
+pie <- pie + labs(fill="Sentiment") +  theme(axis.text = element_blank(),
+                                             axis.ticks = element_blank(),
+                                             axis.title.x= element_blank(),
+                                             axis.title.y= element_blank(),
+                                             panel.grid  = element_blank())
+png("pie.png" , width=800, height = 600)
+pie
+dev.off()
