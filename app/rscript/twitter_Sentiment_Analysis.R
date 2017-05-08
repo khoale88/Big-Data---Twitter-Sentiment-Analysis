@@ -46,7 +46,7 @@ if (length(args) == 2) {
   output_path <- ""
 }
  
-num_tweets <- 200 #to define the number of tweets
+num_tweets <- 20 #to define the number of tweets
 #Getting tweets
 tweets <- searchTwitter(searchTerm, num_tweets, lang='en', resultType="recent") #can remove resultType=recent
 tweets #to see the tweets
