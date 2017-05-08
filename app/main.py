@@ -6,7 +6,7 @@ import callR as cR
 
 app = Flask(__name__)
 
-app.config["RSCRIPT_FOLDER"] = "./RScript/sample_R.r"
+app.config["RSCRIPT_FOLDER"] = "./rscript/location.R"
 app.config["OUTPUT_FOLDER"] = "./static/"
 
 
@@ -15,10 +15,14 @@ def search():
     search_term = request.json["searchTerm"]
     cR.call_rscript(app.config["RSCRIPT_FOLDER"],
                     search_term,
-                    app.config["OUTPUT_FOLDER"]+"output.png")
+                    app.config["OUTPUT_FOLDER"])
 
     output = {}
-    output["link"] = url_for("static", filename="output.png")
+    output["pics"] = {}
+    # url_for("static", filename="output.png")
+    output["pics"]["locPNG"] = url_for("static", filename="loc.png")
+    output["pics"]["barPNG"] = url_for("static", filename="bar.png")
+    output["pics"]["piePNG"] = url_for("static", filename="pie.png")
 
     return Response(response=json.dumps(output), status=200)
 
