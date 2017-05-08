@@ -1,4 +1,7 @@
 # Install and Activate Packages
+library(sparklyr)
+sc <- spark_connect(master = "local")
+library(SparkR)
 library(streamR)
 library(RCurl)
 library(RJSONIO)
@@ -23,8 +26,8 @@ neg <- scan('negative-words.txt', what='character', comment.char=';') #folder wi
 pos.words <- c(pos, 'upgrade')
 neg.words <- c(neg, 'wtf', 'wait', 'waiting', 'epicfail')
 score.sentiment <- function(sentences, pos.words, neg.words, .progress='none'){
-  require(plyr)
-  require(stringr)
+require(plyr)
+require(stringr)
   scores <- laply(sentences, function(sentence, pos.words, neg.words){
     sentence <- gsub('[[:punct:]]', "", sentence)
     sentence <- gsub('[[:cntrl:]]', "", sentence)
@@ -47,8 +50,12 @@ score.sentiment <- function(sentences, pos.words, neg.words, .progress='none'){
 
 
 searchTerm <- "#Gucci"
-searchResults <- searchTwitter(searchTerm, n = 50)  # Gather Tweets 
+searchResults <- searchTwitter(searchTerm, n = 50)  # Gather Tweets
+
+
+
 tweetFrame <- twListToDF(searchResults)  # Convert to a nice dF
+tweetFrame_tbl <- copy_to(sc, tweetFrame)
 tweetText <- tweetFrame$text
 userInfo <- lookupUsers(tweetFrame$screenName)  # Batch lookup of user info
 userFrame <- twListToDF(userInfo)  # Convert to a nice dF
@@ -60,7 +67,6 @@ tweetScores <- mutate(tweetScores, sentiment=ifelse(tweetScores$score > 0, 'posi
 tweet.sentiment <- tweetScores$sentiment
 tweetFrame <- cbind(tweetFrame$screenName, tweet.sentiment)
 tweetFrame
-
 sapply(locations, class)
 #evaluation tweets function
 tweet.x <- na.omit(tweet.x)
