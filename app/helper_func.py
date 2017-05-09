@@ -38,9 +38,3 @@ def csv_to_array(csv_path):
     #ignore the 1st entry which is x
     return output[1:]
 
-def get_search_thread(searches, session):
-    for search in searches:
-        if search.getName() == session['id']:
-            return search
-    return None
-

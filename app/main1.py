@@ -1,6 +1,6 @@
 import os
-from threading import Thread
 import uuid
+from threading import Thread
 from flask import Flask, request, json, Response, render_template, url_for, session
 # from werkzeug.datastructures import Headers
 import helper_func as hf
@@ -20,44 +20,14 @@ app.config["LOCATION_MAP_FILENAME"] = "loc.png"
 app.config["PIE_CHART_FILENAME"] = "pie.png"
 app.config["WORD_CLOUD_FILENAME"] = "wordCloud.png"
 
-
-CURRENT_SEARCH = None
-SEARCHES = []
+SEARCHES = {}
 
 @app.route('/search', methods=['POST'])
 def search():
     """web integrated API taking searchTerm input"""
 
     search_term = request.json["searchTerm"]
-
-    # replace the rest of this method with just one following line of code
-    # to integrating with web UI with different tabs
     return search_with_term(search_term)
-
-
-    # #delete all file b4 generate new files
-    # exclude = ["jquery-3.2.1.min.js", "style.css"]
-    # hf.del_files_except(directory=app.config["OUTPUT_FOLDER"],
-    #                     exclude=exclude)
-
-    # session['search_term'] = search_term
-    # #call R script
-    # hf.call_rscript(app.config["RSCRIPT_FOLDER"],
-    #                 app.config["RSCRIPT"],
-    #                 search_term,
-    #                 app.config["OUTPUT_FOLDER"])
-
-    # output = {}
-    # output["pics"] = {}
-    # # url_for("static", filename="output.png")
-    # output["pics"]["locPNG"] = os.path.join(app.config["OUTPUT_FOLDER"],
-    #                                         app.config["LOCATION_MAP_FILENAME"])
-    # output["pics"]["piePNG"] = os.path.join(app.config["OUTPUT_FOLDER"],
-    #                                         app.config["PIE_CHART_FILENAME"])
-    # output["pics"]["wordCloudPNG"] = os.path.join(app.config["OUTPUT_FOLDER"],
-    #                                               app.config["WORD_CLOUD_FILENAME"])
-
-    # return Response(response=json.dumps(output), status=200)
 
 @app.route('/search/<string:search_term>', methods=['POST'])
 def search_with_term(search_term):
@@ -67,7 +37,10 @@ def search_with_term(search_term):
         403 - new searchTerm is rejected due to current thread is in process"""
 
     global SEARCHES
-    search_thread = hf.get_search_thread(SEARCHES, session)
+    # search_thread = hf.get_search_thread(SEARCHES, session)
+    if session['id'] not in SEARCHES:
+        SEARCHES[session['id']] = None
+    search_thread = SEARCHES[session['id']]
     if search_thread is not None:
         if search_thread.getName() == search_term:
             #case the current thread has the same searchTerm, sever won't reset thread
@@ -79,8 +52,7 @@ def search_with_term(search_term):
                 return Response(status=403)
             else:
                 #deregister fininshed thread to start a new one
-                SEARCHES.remove(search_thread)
-                search_thread = None
+                search_thread = SEARCHES[session['id']] = None
 
     if search_thread is None:
         #start only if current thread is available
@@ -99,7 +71,7 @@ def search_with_term(search_term):
         search_thread.setName(session['id'])
         search_thread.start()
         #refresh the search term
-        SEARCHES.append(search_thread)
+        SEARCHES[session['id']] = search_thread
         session['search_term'] = search_term
         return Response(status=204)
 
@@ -109,7 +81,7 @@ def get_tweet_trends():
         202 - processing
         404 - start a search
         500 - internal error, start a new seatch"""
-    search_thread = hf.get_search_thread(SEARCHES, session)
+    search_thread = SEARCHES[session['id']]
     if search_thread is None:
         #need to start at least one search
         return Response(status=404)
@@ -137,7 +109,7 @@ def get_tweets():
         202 - processing
         404 - start a search
         500 - internal error, start a new seatch"""
-    search_thread = hf.get_search_thread(SEARCHES, session)
+    search_thread = SEARCHES[session['id']]
     if search_thread is None:
         #need to start at least one search
         return Response(status=404)
@@ -165,7 +137,7 @@ def get_loc_map():
         202 - processing
         404 - start a search
         500 - internal error, start a new seatch"""
-    search_thread = hf.get_search_thread(SEARCHES, session)
+    search_thread = SEARCHES[session['id']]
     if search_thread is None:
         #need to start at least one search
         return Response(status=404)
@@ -192,8 +164,7 @@ def get_pie_chart():
         202 - processing
         404 - start a search
         500 - internal error, start a new seatch"""
-    search_thread = hf.get_search_thread(SEARCHES, session)
-    print search_thread
+    search_thread = SEARCHES[session['id']]
     if search_thread is None:
         #need to start at least one search
         return Response(status=404)
@@ -220,7 +191,7 @@ def get_word_cloud():
         202 - processing
         404 - start a search
         500 - internal error, start a new seatch"""
-    search_thread = hf.get_search_thread(SEARCHES, session)
+    search_thread = SEARCHES[session['id']]
     if search_thread is None:
         #need to start at least one search
         return Response(status=404)
@@ -246,7 +217,7 @@ def index():
     """render index template (homepage)"""
     if 'id' not in session:
         session['id'] = uuid.uuid4().hex
-    print session
+        SEARCHES[session['id']] = None
     return render_template("index1.html")
 
 if __name__ == "__main__":
