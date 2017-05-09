@@ -34,7 +34,7 @@ def search():
 
 
     #delete all file b4 generate new files
-    exclude = ["jquery-3.2.1.min.js", "style.css"]
+    exclude = ["jquery-3.2.1.min.js", "script.js", "style.css", "bg.jpg", "demo.css", "pcss3t.css"]
     hf.del_files_except(directory=app.config["OUTPUT_FOLDER"],
                         exclude=exclude)
 
