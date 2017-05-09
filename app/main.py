@@ -28,33 +28,33 @@ def search():
 
     search_term = request.json["searchTerm"]
 
-    ## replace the rest of this method with just one following line of code
-    ## to integrating with web UI with different tabs
-    # return search_with_term(search_term)
+    # replace the rest of this method with just one following line of code
+    # to integrating with web UI with different tabs
+    return search_with_term(search_term)
 
 
-    #delete all file b4 generate new files
-    exclude = ["jquery-3.2.1.min.js", "script.js", "style.css", "bg.jpg", "demo.css", "pcss3t.css"]
-    hf.del_files_except(directory=app.config["OUTPUT_FOLDER"],
-                        exclude=exclude)
+    # #delete all file b4 generate new files
+    # exclude = ["jquery-3.2.1.min.js", "style.css"]
+    # hf.del_files_except(directory=app.config["OUTPUT_FOLDER"],
+    #                     exclude=exclude)
 
-    #call R script
-    hf.call_rscript(app.config["RSCRIPT_FOLDER"],
-                    app.config["RSCRIPT"],
-                    search_term,
-                    app.config["OUTPUT_FOLDER"])
+    # #call R script
+    # hf.call_rscript(app.config["RSCRIPT_FOLDER"],
+    #                 app.config["RSCRIPT"],
+    #                 search_term,
+    #                 app.config["OUTPUT_FOLDER"])
 
-    output = {}
-    output["pics"] = {}
-    # url_for("static", filename="output.png")
-    output["pics"]["locPNG"] = os.path.join(app.config["OUTPUT_FOLDER"],
-                                            app.config["LOCATION_MAP_FILENAME"])
-    output["pics"]["piePNG"] = os.path.join(app.config["OUTPUT_FOLDER"],
-                                            app.config["PIE_CHART_FILENAME"])
-    output["pics"]["wordCloudPNG"] = os.path.join(app.config["OUTPUT_FOLDER"],
-                                                  app.config["WORD_CLOUD_FILENAME"])
+    # output = {}
+    # output["pics"] = {}
+    # # url_for("static", filename="output.png")
+    # output["pics"]["locPNG"] = os.path.join(app.config["OUTPUT_FOLDER"],
+    #                                         app.config["LOCATION_MAP_FILENAME"])
+    # output["pics"]["piePNG"] = os.path.join(app.config["OUTPUT_FOLDER"],
+    #                                         app.config["PIE_CHART_FILENAME"])
+    # output["pics"]["wordCloudPNG"] = os.path.join(app.config["OUTPUT_FOLDER"],
+    #                                               app.config["WORD_CLOUD_FILENAME"])
 
-    return Response(response=json.dumps(output), status=200)
+    # return Response(response=json.dumps(output), status=200)
 
 @app.route('/search/<string:search_term>', methods=['POST'])
 def search_with_term(search_term):
@@ -229,4 +229,4 @@ def index():
 if __name__ == "__main__":
     app.run(debug=True,
             host=app.config["SERVER_HOST"],
-            port=app.config["SERVER_PORT"])
+port=app.config["SERVER_PORT"])
