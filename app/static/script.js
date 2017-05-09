@@ -14,14 +14,16 @@ $(document).ready(function() {
                     "searchTerm": $("#searchTerm").val()
                 }, null, '\t'),
                 dataType: "json",
-                success: function(data) {
+                success: function(data, textStatus, xhr) {
 
                 },
                 complete: function(xhr, textStatus) {
                     console.log(xhr.status);
                     if (xhr.status === 204) {
+                        console.log("Inside");
+                        $("#divContent").show();
                         getWordCloud();
-                        getTrendingTweets();
+                        // getTrendingTweets();
                     }
                 }
             });
@@ -31,41 +33,39 @@ $(document).ready(function() {
 });
 
 function getWordCloud() {
+    console.log("getWordCloud");
     $.ajax({
         type: 'GET',
         url: "/wordCloud",
         dataType: "json",
-        success: function(data) {
+        success: function(data, textStatus, xhr) {
             console.log(xhr.status);
-            if (xhr.status === 202) {
-                setTimeout(getWordCloud, 2000);
-            } else if (xhr.status === 200) {
-                $("#imgWordCloud").prop("src", data["wordCloud"] + "?" + d.getTime());
-                getPieChart();
-            }
+            $("#imgWordCloud").prop("src", data["wordCloud"] + "?" + d.getTime());
+            getPieChart();
         },
         complete: function(xhr, textStatus) {
-
+            if (xhr.status === 202) {
+                setTimeout(getWordCloud, 2000);
+            }
         }
     });
 }
 
 function getPieChart() {
+    console.log("getPieChart");
     $.ajax({
         type: 'GET',
         url: "/pieChart",
         dataType: "json",
-        success: function(data) {
+        success: function(data, textStatus, xhr) {
             console.log(xhr.status);
-            if (xhr.status === 202) {
-                setTimeout(getPieChart, 2000);
-            } else if (xhr.status === 200) {
-                $("#imgPieChart").prop("src", data["pieChart"] + "?" + d.getTime());
-                getLocationMap();
-            }
+            $("#imgWordCloud").prop("src", data["pieChart"] + "?" + d.getTime());
+            // getLocationMap();
         },
         complete: function(xhr, textStatus) {
-
+            if (xhr.status === 202) {
+                setTimeout(getPieChart, 2000);
+            }
         }
     });
 }
@@ -75,7 +75,7 @@ function getLocationMap() {
         type: 'GET',
         url: "/locMap",
         dataType: "json",
-        success: function(data) {
+        success: function(data, textStatus, xhr) {
             console.log(xhr.status);
             if (xhr.status === 202) {
                 setTimeout(getLocationMap, 2000);
@@ -94,7 +94,7 @@ function getTrendingTweets() {
         type: 'GET',
         url: "/topTrends",
         dataType: "json",
-        success: function(data) {
+        success: function(data, textStatus, xhr) {
             console.log(xhr.status);
             if (xhr.status === 202) {
                 setTimeout(getWordCloud, 2000);
