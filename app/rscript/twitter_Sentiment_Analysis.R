@@ -32,24 +32,28 @@ setup_twitter_oauth(api_key,api_secret, access_token, access_token_secret)
 
 
 args = commandArgs(trailingOnly=TRUE)
-if (length(args) == 3) {
+if (length(args) == 4) {
   print ("args = 3")
   searchTerm <- args[1]
   output_path <- args[2]
-  working_dir <- args[3]
+  file_prefix <- args[3]
+  working_dir <- args[4]
+  
 } else if (length(args) == 1){
   print ("args = 1")
   searchTerm <- args[1]
   output_path <- ""
   working_dir <- ""
+  file_prefix <- ""
 }else {
   print ("args = 0")
   searchTerm <- "#Bench press"
   output_path <- ""
   working_dir <- ""
+  file_prefix <- ""
 }
  
-num_tweets <- 20 #to define the number of tweets
+num_tweets <- 3 #to define the number of tweets
 #Getting tweets
 tweets <- searchTwitter(searchTerm, num_tweets, lang='en', resultType="recent") #can remove resultType=recent
 tweets #to see the tweets
@@ -86,7 +90,7 @@ for(i in 1:len_trend)
 trend_new
 
 #write.csv(trend_new, file='D:/297 Big data/BigDataProject/tweets_topTrend.csv', row.names=F)
-topTrend_path <- paste(output_path,"tweets_topTrend.csv",sep="")
+topTrend_path <- paste(output_path, file_prefix, ".","tweets_topTrend.csv",sep="")
 if(!file.exists(topTrend_path)){
   print(topTrend_path)
   print("does not exist")
@@ -125,7 +129,7 @@ clean_tweet = gsub("[^0-9A-Za-z#///' ]", "", clean_tweet) #Removing any non-engl
 clean_tweet #to view cleansed tweet
 
 #write.csv(clean_tweet, file='D:/297 Big data/BigDataProject/tweets_cleansed.csv', row.names=F)
-tweetsCleansed_path <- paste(output_path, "tweets_cleansed.csv", sep="")
+tweetsCleansed_path <- paste(output_path, file_prefix, ".", "tweets_cleansed.csv", sep="")
 if(!file.exists(tweetsCleansed_path)){
   file.create(tweetsCleansed_path)
 }
@@ -189,7 +193,7 @@ if (words_count < 2) {
 }
 
 #png(filename="D:/297 Big data/BigDataProject/wordCloud.png")
-png(paste(output_path, "wordCloud.png", sep=""), width=800, height = 600)
+png(paste(output_path, file_prefix, ".", "wordCloud.png", sep=""), width=800, height = 600)
 wordcloud(tweet_clean, random.order = F, max.words = 40, scale=c(3,0.5), colors = rainbow(50))
 dev.off()
 
@@ -278,7 +282,7 @@ mp <- ggplot() +   mapWorld
 mp <- mp + geom_point(aes(x=tweetData$tweet.x, y=tweetData$tweet.y, colour=factor(tweetScores$sentiment)), size=3) 
 mp <- mp + labs(colour = "Sentiment")
 
-png(paste(output_path, "loc.png", sep=""), width=800, height = 600)
+png(paste(output_path, file_prefix, ".", "loc.png", sep=""), width=800, height = 600)
 mp
 dev.off()
 
@@ -291,6 +295,6 @@ pie <- pie + labs(fill="Sentiment") +  theme(axis.text = element_blank(),
                                              panel.grid  = element_blank())
 
 
-png(paste(output_path, "pie.png", sep=""), width=800, height = 600)
+png(paste(output_path, file_prefix, ".", "pie.png", sep=""), width=800, height = 600)
 pie
 dev.off()

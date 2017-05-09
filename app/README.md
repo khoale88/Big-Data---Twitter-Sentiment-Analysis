@@ -1,5 +1,2 @@
-#dependency
-
-Python
-
-Python-Fask
+# Dependency
+Python python-Fask
