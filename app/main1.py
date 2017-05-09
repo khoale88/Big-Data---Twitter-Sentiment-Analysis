@@ -247,7 +247,7 @@ def index():
     if 'id' not in session:
         session['id'] = uuid.uuid4().hex
     print session
-    return render_template("index.html")
+    return render_template("index1.html")
 
 if __name__ == "__main__":
     app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
