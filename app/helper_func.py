@@ -11,14 +11,17 @@ def del_files_except(directory, exclude):
         if filename not in exclude:
             remove(join(directory, filename))
 
-def call_rscript(script_path, *args):
+def call_rscript(working_dir, script_file, *args):
     """run r script with arbitrary numbers of arguments"""
-    subprocess.call(["Rscript", script_path] + [str(arg) for arg in args])
+    subprocess.call(["Rscript", working_dir+script_file] +
+                    [str(arg) for arg in args] +
+                    [working_dir])
 
-def read_tweets_trend(csv_path):
+def csv_to_array(csv_path):
     """read all line in csv file and return a flaten arrays"""
-    with open(csv_path, 'r') as trend_file:
-        trend_reader = csv.reader(trend_file)
-        trends = [trend for sub_trend in trend_reader for trend in sub_trend]
-    return trends
+    with open(csv_path, 'r') as csv_file:
+        csv_reader = csv.reader(csv_file)
+        output = [item for line_items in csv_reader for item in line_items]
+    #ignore the 1st entry which is x
+    return output[1:]
 

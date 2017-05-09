@@ -32,18 +32,21 @@ setup_twitter_oauth(api_key,api_secret, access_token, access_token_secret)
 
 
 args = commandArgs(trailingOnly=TRUE)
-if (length(args) == 2) {
-  print ("args = 2")
+if (length(args) == 3) {
+  print ("args = 3")
   searchTerm <- args[1]
   output_path <- args[2]
+  working_dir <- args[3]
 } else if (length(args) == 1){
   print ("args = 1")
   searchTerm <- args[1]
   output_path <- ""
+  working_dir <- ""
 }else {
   print ("args = 0")
   searchTerm <- "#Bench press"
   output_path <- ""
+  working_dir <- ""
 }
  
 num_tweets <- 20 #to define the number of tweets
@@ -210,8 +213,10 @@ library('data.table')
 library('mapproj')
 library("ggmap")
 
-pos <- scan('positive-words.txt', what='character', comment.char=';') #folder with positive dictionary
-neg <- scan('negative-words.txt', what='character', comment.char=';') #folder with negative dictionary
+positive_words = paste(working_dir,'positive-words.txt', sep = "")
+pos <- scan(positive_words, what='character', comment.char=';') #folder with positive dictionary
+negative_words = paste(working_dir,'negative-words.txt', sep = "")
+neg <- scan(negative_words, what='character', comment.char=';') #folder with negative dictionary
 pos.words <- c(pos, 'upgrade')
 neg.words <- c(neg, 'wtf', 'wait', 'waiting', 'epicfail')
 
