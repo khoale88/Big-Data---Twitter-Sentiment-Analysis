@@ -92,10 +92,11 @@ def get_tweet_trends():
     if os.path.exists(filename):
     #if the file exist, return the trend with status code = 200
         tweet_trends = hf.csv_to_array(filename)
-        return Response(headers=[("Content-Type", "json/application")],
-                        response=json.dumps({"tweetTrends" : tweet_trends,
-                                             "searchTerm"  : session['search_term']}),
-                        status=200)
+        return render_template("trendingTweets.html", items=tweet_trends)
+        # return Response(headers=[("Content-Type", "json/application")],
+        #                 response=json.dumps({"tweetTrends" : tweet_trends,
+        #                                      "searchTerm"  : session['search_term']}),
+        #                 status=200)
     if search_thread.isAlive():
         #processing, please wait
         return Response(status=202)
@@ -120,10 +121,11 @@ def get_tweets():
     if os.path.exists(filename):
     #if the file exist, return the trend with status code = 200
         tweets = hf.csv_to_array(filename)
-        return Response(headers=[("Content-Type", "json/application")],
-                        response=json.dumps({"tweet"      : tweets,
-                                             "searchTerm" : session['search_term']}),
-                        status=200)
+        return render_template("allTweets.html", tweets=tweets)
+        # return Response(headers=[("Content-Type", "json/application")],
+        #                 response=json.dumps({"tweet"      : tweets,
+        #                                      "searchTerm" : session['search_term']}),
+        #                 status=200)
     if search_thread.isAlive():
         #processing, please wait
         return Response(status=202)
@@ -218,7 +220,7 @@ def index():
     if 'id' not in session:
         session['id'] = uuid.uuid4().hex
         SEARCHES[session['id']] = None
-    return render_template("index1.html")
+    return render_template("index.html")
 
 if __name__ == "__main__":
     app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'

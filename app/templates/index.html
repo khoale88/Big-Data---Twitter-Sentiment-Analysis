@@ -1,75 +1,117 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="mdl-js">
 
 <head>
-    <title>Tenant1</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Twitter Sentiment Analysis</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
     <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
-    <link href="../static/style.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename = 'demo.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename = 'pcss3t.css') }}" rel="stylesheet">
     <script src="{{ url_for('static', filename = 'jquery-3.2.1.min.js') }}"></script>
+    <script src="{{ url_for('static', filename = 'script.js') }}"></script>
 </head>
 
-<body>
-    <div style="width:1200px;padding-right: 15px;padding-left: 15px;margin-right: auto;margin-left: auto;">
-        <div class="header">
-            <nav>
-                <ul class="nav nav-pills pull-right">
-                    <li role="presentation"><a href="">Home</a></li>
-                </ul>
-            </nav>
-            <h3 class="text-muted">Sentiment Analysis</h3>
+<body data-feedly-mini="yes">
+    <img src="{{ url_for('static', filename = 'bg.jpg') }}" alt="" class="bg">
+    <div class="page">
+        <h1>Twitter Sentiment Analysis</h1>
+        <br>
+        <br>
+        <div class="div2">
+            <br>
+            <input type="text" class="form-control" name="searchTerm" id="searchTerm" placeholder="Search" style="height:40px; width: 500px;display: inline-block !important;" data-url="{{url_for('search')}}">
         </div>
+        <br>
 
-        <div class="jumbotron">
-            <div class="div2">
-                <form class="" method="post" enctype="multipart/form-data">
-                    <input cols="50" type="text" name="diagram" id="searchTerm" class="form-control" aria-placeholder="enter search term"> </input>
-                    <br>
-                    <button id="btnSearch" class="btn btn-lg btn-primary" type="button" style="width:400px;text-align: center;">Search</button>
-                </form>
-            </div>
+        <div class="pcss3t pcss3t-height-auto" id="divContent" style="display:none;">
+            <input type="radio" name="pcss3t" checked="" id="tab1" class="tab-content-first">
+            <label for="tab1"><i class="icon-home"></i>Word Cloud</label>
+
+            <input type="radio" name="pcss3t" id="tab2" class="tab-content-2">
+            <label for="tab2"><i class="icon-tasks"></i>Pie Chart</label>
+
+            <input type="radio" name="pcss3t" id="tab3" class="tab-content-3">
+            <label for="tab3"><i class="icon-tasks"></i>Location Map</label>
+
+            <input type="radio" name="pcss3t" id="tab5" class="tab-content-last">
+            <label for="tab5"><i class="icon-print"></i>Tweets</label>
+
+            <ul>
+                <li class="tab-content tab-content-first">
+                    <div class="grid-row">
+                        <div class="grid-col grid-col-5">
+                            <h4>Word Cloud</h4>
+                            <div class="inner">
+                                <div class="graph divWordCloud" style="display:none;">
+                                    <img id="imgWordCloud" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid-col grid-col-1">
+                            <h4>Trending Tweets</h4>
+                            <div class="trendingtweets tweets typography">
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="tab-content tab-content-2">
+                    <div class="grid-row">
+                        <div class="grid-col grid-col-5">
+                            <h4>Pie Chart</h4>
+                            <div class="inner">
+                                <div class="graph divPieChart" style="display:none;">
+                                    <img id="imgPieChart" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid-col grid-col-1">
+                            <h4>Trending Tweets</h4>
+                            <div class="trendingtweets tweets typography">
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="tab-content tab-content-3">
+                    <div class="grid-row">
+                        <div class="grid-col grid-col-5">
+                            <h4>Location Map</h4>
+                            <div class="inner">
+                                <div class="graph divLocationMap" style="display:none;">
+                                    <img id="imgLocationMap" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid-col grid-col-1">
+                            <h4>Trending Tweets</h4>
+                            <div class="trendingtweets tweets typography">
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="tab-content tab-content-last">
+                    <div class="grid-row">
+                        <div class="grid-col grid-col-5">
+                            <h4>Tweets</h4>
+                            <div class="inner allTweets tweets">
+                            </div>
+                        </div>
+                        <div class="grid-col grid-col-1">
+                            <h4>Trending Tweets</h4>
+                            <div class="trendingtweets tweets typography">
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
         </div>
-
-        <div class="jumbotron" id="divImage" style="display:none;">
-            <img id="locPNG" />
-            <img id="piePNG" />
-            <img id="wordCloudPNG" />
-        </div>
-
-        <footer class="footer">
-            <p>&copy; KAPE 2017</p>
-        </footer>
-
     </div>
-    <script>
-        $(document).ready(function() {
-            var host = location.protocol + '//' + location.host;
-            $(document.body).on('click', '#btnSearch', function() {
-                $.ajax({
-                    type: 'POST',
-                    url: "{{url_for('search')}}",
-                    contentType: 'application/json;charset=UTF-8',
-                    data: JSON.stringify({
-                        "searchTerm": $("#searchTerm").val()
-                    }, null, '\t'),
-                    dataType: "json",
-                    success: function(data) {
-                        if (data["pics"]) {
-                            console.log(data["pics"])
-                            d = new Date();
-                            $("#locPNG").prop("src", data["pics"]["locPNG"] + "?" + d.getTime())
-                            $("#piePNG").prop("src", data["pics"]["piePNG"] + "?" + d.getTime())
-                            $("#wordCloudPNG").prop("src", data["pics"]["wordCloudPNG"] + "?" + d.getTime())
-                            $("#divImage").show();
-                        } else {
-                            $("#divImage").hide();
-                            // window.location.replace(data["redirect"]);
-                        }
-                    }
-                });
-            });
-        });
-    </script>
+
+    <div id="feedly-mini" title="feedly Mini tookit"></div>
 </body>
 
 </html>
