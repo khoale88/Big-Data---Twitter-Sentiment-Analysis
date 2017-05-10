@@ -12,25 +12,8 @@
 #                           search term                                                                 #
 #                                                                                                       #
 #########################################################################################################
-#                                 Connecting to Twitter API                                             #                
+#                                  Input environment variables                                          #                
 #########################################################################################################
-
-#Configure twitter API
-api_key <- "AcJYBgHWc7FhEX0Ls4SsVBTkA"
-api_secret <- "r4i8I6kGgm5I0Uyc9R9JHVste4lrGWtajP0CLbZjNif8P3AoFm"
-access_token <- "4162930993-QsTezz6yeseB5AxEaxvu6aSz5ha9m1jVL9B2NUG"
-access_token_secret <- "4Y71MZrnCI20GSDlWpWPYDYEfstvvWWo2j1TPJvbLsNPY"
-
-#Load Library
-library("twitteR")
-library(methods)
-setup_twitter_oauth(api_key,api_secret, access_token, access_token_secret)
-
-
-#########################################################################################################
-#                                       Input search Term                                               #                
-#########################################################################################################
-
 
 args = commandArgs(trailingOnly=TRUE)
 if (length(args) == 4) {
@@ -53,7 +36,28 @@ if (length(args) == 4) {
   working_dir <- ""
   file_prefix <- ""
 }
- 
+
+#########################################################################################################
+#                                 Connecting to Twitter API                                             #                
+#########################################################################################################
+
+#Configure twitter API
+tk <- read.csv(file=paste(working_dir,"twitter_tokens.csv",sep=""), head=TRUE, sep=",", stringsAsFactors = FALSE)
+api_key <- tk$api_key
+api_secret <- tk$api_secret
+access_token <- tk$access_token
+access_token_secret <- tk$access_token_secret
+
+#Load Library
+library("twitteR")
+library(methods)
+setup_twitter_oauth(api_key,api_secret, access_token, access_token_secret)
+
+
+
+#########################################################################################################
+#                                         Get tweets                                                    #                
+#########################################################################################################
 num_tweets <- 3 #to define the number of tweets
 #Getting tweets
 tweets <- searchTwitter(searchTerm, num_tweets, lang='en', resultType="recent") #can remove resultType=recent
