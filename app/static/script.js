@@ -14,11 +14,16 @@ $(document).ready(function() {
                     "searchTerm": $("#searchTerm").val()
                 }, null, '\t'),
                 dataType: "json",
+                beforeSend: function(xhr) {
+                    $("#divContent").hide();
+                    $(".divWordCloud").hide();
+                    $(".divPieChart").hide();
+                    $(".divLocationMap").hide();
+                },
                 success: function(data, textStatus, xhr) {
 
                 },
                 complete: function(xhr, textStatus) {
-                    console.log(xhr.status);
                     if (xhr.status === 204) {
                         $("#divContent").show(1000);
                         setTimeout(getWordCloud, 3000);
@@ -42,13 +47,11 @@ $(document).ready(function() {
 });
 
 function getWordCloud() {
-    console.log("getWordCloud");
     $.ajax({
         type: 'GET',
         url: "/wordCloud",
         dataType: "json",
         success: function(data, textStatus, xhr) {
-            console.log(xhr.status);
             d = new Date();
             $("#imgWordCloud").prop("src", data["wordCloud"] + "?" + d.getTime());
             $(".divWordCloud").show(1500);
@@ -63,13 +66,11 @@ function getWordCloud() {
 }
 
 function getPieChart() {
-    console.log("getPieChart");
     $.ajax({
         type: 'GET',
         url: "/pieChart",
         dataType: "json",
         success: function(data, textStatus, xhr) {
-            console.log(xhr.status);
             d = new Date();
             $("#imgPieChart").prop("src", data["pieChart"] + "?" + d.getTime());
             $(".divPieChart").show(1500);
@@ -84,17 +85,14 @@ function getPieChart() {
 }
 
 function getLocationMap() {
-    console.log("getLocationMap");
     $.ajax({
         type: 'GET',
         url: "/locMap",
         dataType: "json",
         success: function(data, textStatus, xhr) {
-            console.log(xhr.status);
             d = new Date();
             $("#imgLocationMap").prop("src", data["locMap"] + "?" + d.getTime());
             $(".divLocationMap").show(1500);
-            //getLocationMap();
         },
         complete: function(xhr, textStatus) {
             if (xhr.status === 202) {
@@ -105,13 +103,12 @@ function getLocationMap() {
 }
 
 function getTrendingTweets() {
-    console.log("getTrendingTweets");
+    if ($(".trendingtweets").is(':empty')) return;
     $.ajax({
         type: 'GET',
         url: "/topTrends",
         dataType: "html",
         success: function(data, textStatus, xhr) {
-            console.log(xhr.status);
             $(".trendingtweets").html(data);
         },
         complete: function(xhr, textStatus) {
@@ -123,13 +120,11 @@ function getTrendingTweets() {
 }
 
 function getAllTweets() {
-    console.log("getAllTweets");
     $.ajax({
         type: 'GET',
         url: "/tweets",
         dataType: "html",
         success: function(data, textStatus, xhr) {
-            console.log(xhr.status);
             $(".allTweets").html(data);
         },
         complete: function(xhr, textStatus) {
