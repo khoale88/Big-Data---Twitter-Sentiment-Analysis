@@ -23,6 +23,7 @@ access_token_secret <- "4Y71MZrnCI20GSDlWpWPYDYEfstvvWWo2j1TPJvbLsNPY"
 
 #Load Library
 library("twitteR")
+library(methods)
 setup_twitter_oauth(api_key,api_secret, access_token, access_token_secret)
 
 
@@ -209,8 +210,6 @@ library(devtools)
 library(maptools)
 library(maps)
 
-library('dismo')
-library('maps')
 library('ggplot2')
 library('XML')
 library('data.table')
