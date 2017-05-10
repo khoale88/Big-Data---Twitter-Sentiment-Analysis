@@ -20,15 +20,24 @@ $(document).ready(function() {
                 complete: function(xhr, textStatus) {
                     console.log(xhr.status);
                     if (xhr.status === 204) {
-                        console.log("Inside");
-                        $("#divContent").show();
-                        getWordCloud();
-                        // getTrendingTweets();
+                        $("#divContent").show(1000);
+                        setTimeout(getWordCloud, 3000);
+                        setTimeout(getTrendingTweets, 3000);
+                        setTimeout(getAllTweets, 3000);
                     }
                 }
             });
             return $(e.target).blur().focus();
         }
+    });
+
+    $("img").on('error', function() {
+        console.log("error loading image");
+        d = new Date();
+        var image = $(this);
+        setTimeout(function() {
+            image.prop("src", image.prop("src") + d.getTime()).show(1500);
+        }, 500);
     });
 });
 
@@ -40,12 +49,14 @@ function getWordCloud() {
         dataType: "json",
         success: function(data, textStatus, xhr) {
             console.log(xhr.status);
+            d = new Date();
             $("#imgWordCloud").prop("src", data["wordCloud"] + "?" + d.getTime());
+            $(".divWordCloud").show(1500);
             getPieChart();
         },
         complete: function(xhr, textStatus) {
             if (xhr.status === 202) {
-                setTimeout(getWordCloud, 2000);
+                setTimeout(getWordCloud, 3000);
             }
         }
     });
@@ -59,51 +70,72 @@ function getPieChart() {
         dataType: "json",
         success: function(data, textStatus, xhr) {
             console.log(xhr.status);
-            $("#imgWordCloud").prop("src", data["pieChart"] + "?" + d.getTime());
-            // getLocationMap();
+            d = new Date();
+            $("#imgPieChart").prop("src", data["pieChart"] + "?" + d.getTime());
+            $(".divPieChart").show(1500);
+            getLocationMap();
         },
         complete: function(xhr, textStatus) {
             if (xhr.status === 202) {
-                setTimeout(getPieChart, 2000);
+                setTimeout(getPieChart, 3000);
             }
         }
     });
 }
 
 function getLocationMap() {
+    console.log("getLocationMap");
     $.ajax({
         type: 'GET',
         url: "/locMap",
         dataType: "json",
         success: function(data, textStatus, xhr) {
             console.log(xhr.status);
-            if (xhr.status === 202) {
-                setTimeout(getLocationMap, 2000);
-            } else if (xhr.status === 200) {
-                $("#imgLocationMap").prop("src", data["locMap"] + "?" + d.getTime());
-            }
+            d = new Date();
+            $("#imgLocationMap").prop("src", data["locMap"] + "?" + d.getTime());
+            $(".divLocationMap").show(1500);
+            //getLocationMap();
         },
         complete: function(xhr, textStatus) {
-
+            if (xhr.status === 202) {
+                setTimeout(getLocationMap, 3000);
+            }
         }
     });
 }
 
 function getTrendingTweets() {
+    console.log("getTrendingTweets");
     $.ajax({
         type: 'GET',
         url: "/topTrends",
-        dataType: "json",
+        dataType: "html",
         success: function(data, textStatus, xhr) {
             console.log(xhr.status);
-            if (xhr.status === 202) {
-                setTimeout(getWordCloud, 2000);
-            } else if (xhr.status === 200) {
-
-            }
+            $(".trendingtweets").html(data);
         },
         complete: function(xhr, textStatus) {
+            if (xhr.status === 202) {
+                setTimeout(getTrendingTweets, 3000);
+            }
+        }
+    });
+}
 
+function getAllTweets() {
+    console.log("getAllTweets");
+    $.ajax({
+        type: 'GET',
+        url: "/tweets",
+        dataType: "html",
+        success: function(data, textStatus, xhr) {
+            console.log(xhr.status);
+            $(".allTweets").html(data);
+        },
+        complete: function(xhr, textStatus) {
+            if (xhr.status === 202) {
+                setTimeout(getAllTweets, 3000);
+            }
         }
     });
 }

@@ -188,8 +188,13 @@
 .pcss3t .grid-col .inner {
     padding: 10px 0;
     border-radius: 5px;
-    background: #f2f2f2;
     text-align: center;
+}
+
+.pcss3t .grid-col .tweets {
+    padding: 10px 0;
+    border-radius: 5px;
+    text-align: left;
 }
 
 .pcss3t .grid-col-1 {
@@ -340,7 +345,7 @@
     position: absolute;
     top: 8px;
     left: 0;
-    width: 6px;
+    width: 4px;
     height: 4px;
     background: #404040;
 }
