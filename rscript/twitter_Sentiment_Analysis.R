@@ -289,14 +289,23 @@ png(paste(output_path, file_prefix, ".", "loc.png", sep=""), width=800, height =
 mp
 dev.off()
 
-bar <- ggplot(data=tweetScores, aes(x = factor(1), fill = factor(tweet.sentiment))) + geom_bar(width = 1)
-pie <- bar + coord_polar(theta = "y")
-pie <- pie + labs(fill="Sentiment") +  theme(axis.text = element_blank(),
-                                             axis.ticks = element_blank(),
-                                             axis.title.x= element_blank(),
-                                             axis.title.y= element_blank(),
-                                             panel.grid  = element_blank())
+library(dplyr)
+p <- length(which(tweetScores=="positive"))
+n <- length(which(tweetScores=="negative"))
+neu <- length(which(tweetScores=="neutral"))
+df <- data.frame(value = c(neu, p, n),
+                 Group =  c("Neutral", "Positive", "Negative")) %>%
+  # factor levels need to be the opposite order of the cumulative sum of the values
+  mutate(Group = factor(Group, levels = c("Negative","Positive", "Neutral")),
+         cumulative = cumsum(value),
+         midpoint = cumulative - value / 2,
+         label = paste0(Group, " ", round(value / sum(value) * 100, 1), "%"))
 
+pie <- ggplot(df, aes(x = 1, weight = value, fill = Group)) +
+  geom_bar(width = 1, position = "stack") +
+  coord_polar(theta = "y") +
+  geom_text(aes(x = 1.3, y = midpoint, label = label)) +
+  theme_nothing()   
 
 png(paste(output_path, file_prefix, ".", "pie.png", sep=""), width=800, height = 600)
 pie
