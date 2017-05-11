@@ -1,7 +1,23 @@
-# Big-Data---Twitter-Sentiment-Analysis
+#Creating twitter dev account
+1. Create Twitter account
+2. Go to:  https://apps.twitter.com/
+3. Click on create new app
+4. Use the credentials in R script to connect to twitter api and access Tweets
 
-For pie chart:
-
-sudo pip install matplotlib
-
-sudo apt-get install python-tk
+#Install following packages to successfully run R script
+twitteR
+methods
+wordcloud
+tm
+stringr
+streamR
+RCurl
+RJSONIO
+devtools
+maptools
+maps
+ggplot2
+XML
+data.table
+mapproj
+ggmap
