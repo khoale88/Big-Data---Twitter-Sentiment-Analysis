@@ -5,7 +5,10 @@
 4. Use the credentials in R script to connect to twitter api and access Tweets
 5. Create file "twitter_token.csv" inside rscript folder with 4 headers: "api_key", "api_secret", "access_token", "access_token_secret" and their values
 
-# Install following packages to successfully run R script 
+#Dependency
+1. r-base:3.4
+2. python:2.7
+## Install following packages to successfully run R script 
 1. twitteR 
 2. methods
 3. wordcloud
@@ -23,14 +26,13 @@
 15. mapproj
 16. ggmap
 
-# Install following library to run Python (v2.7)
+# Install following library to run Python
 1. Flask
 
 # Run application natively in local environment
-1. Install r-base and all packages mentioned above
-2. Install python:2.7 and all libraries mentioned above
-3. Open terminal in the folder where main.py is present
-4. Execute the command: python main.py 
+1. Install all dependency mentioned above
+2. Open terminal in the folder where main.py is present
+3. Execute the command: python main.py 
 
 # Run application in docker environment
 1. Install docker
