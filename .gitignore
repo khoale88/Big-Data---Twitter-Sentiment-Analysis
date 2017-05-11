@@ -2,5 +2,8 @@
 .DS_Store
 .RData
 .Rapp.history
+.Rhistory
 .httr-oauth
+Rplots.pdf
 app/rscript/twitter_tokens.csv
+*.pyc
