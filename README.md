@@ -1,8 +1,9 @@
-# Creating twitter dev account
+# Creating twitter dev account (Important)
 1. Create Twitter account
 2. Go to:  https://apps.twitter.com/
 3. Click on create new app
 4. Use the credentials in R script to connect to twitter api and access Tweets
+5. Create file "twitter_token.csv" inside rscript folder with 4 headers: "api_key", "api_secret", "access_token", "access_token_secret" and their values
 
 # Install following packages to successfully run R script 
 1. twitteR 
@@ -22,6 +23,19 @@
 15. mapproj
 16. ggmap
 
-# To run R script in python
-execute following command inside the folder where app.py is present:
-python app.py 
+# Install following library to run Python (v2.7)
+1. Flask
+
+# Run application natively in local environment
+1. Install r-base and all packages mentioned above
+2. Install python:2.7 and all libraries mentioned above
+3. Open terminal in the folder where main.py is present
+4. Execute the command: python app.py 
+
+# Run application in docker environment
+1. Install docker
+2. Open terminal in the folder where Dockerfile is present
+3. Execute the command: docker build -t tsa .
+4. Execute the command: docker run -d -p 5000:5000 tsa
+5. Open webpage at Localhost:5000 for Ubuntu, or <VM_IPaddress>:5000 for Mac or Windows
+
