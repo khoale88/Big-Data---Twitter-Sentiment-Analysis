@@ -26,6 +26,7 @@
 14. data.table
 15. mapproj
 16. ggmap
+17. dplyr
 
 ## Install following library to run Python
 1. Flask
