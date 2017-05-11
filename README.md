@@ -30,7 +30,7 @@
 1. Install r-base and all packages mentioned above
 2. Install python:2.7 and all libraries mentioned above
 3. Open terminal in the folder where main.py is present
-4. Execute the command: python app.py 
+4. Execute the command: python main.py 
 
 # Run application in docker environment
 1. Install docker
