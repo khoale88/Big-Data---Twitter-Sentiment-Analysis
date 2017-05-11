@@ -19,6 +19,12 @@ app.config["TWEET_FILENAME"] = "tweets_cleansed.csv"
 app.config["LOCATION_MAP_FILENAME"] = "loc.png"
 app.config["PIE_CHART_FILENAME"] = "pie.png"
 app.config["WORD_CLOUD_FILENAME"] = "wordCloud.png"
+app.config["LINE_GRAPH_FILENAME"] = "lineGraph.png"
+
+@app.route('/ping', methods=['GET'])
+def ping():
+    """for pinging purpose"""
+    return Response(status=200)
 
 @app.route('/search', methods=['POST'])
 def search():
@@ -182,6 +188,31 @@ def get_word_cloud():
     #if the file exist, return the path with status code = 200
         return Response(headers=[("Content-Type", "json/application")],
                         response=json.dumps({"wordCloud"  : filename,
+                                             "searchTerm" : session['search_term']}),
+                        status=200)
+    search_thread = SEARCHES[session['id']]
+    if search_thread.isAlive():
+        #processing, please wait
+        return Response(status=202)
+    else:
+        #error occurs and thread is stop, no output file
+        return Response(status=500)
+
+@app.route('/lineGraph', methods=['GET'])
+@search_term_require
+def get_line_graph():
+    """ 200 - succesful with return
+        202 - processing
+        404 - start a search
+        500 - internal error, start a new seatch"""
+
+    filename = session['id'] + '.' + app.config["LINE_GRAPH_FILENAME"]
+    filename = os.path.join(app.config["OUTPUT_FOLDER"],
+                            filename)
+    if os.path.exists(filename):
+    #if the file exist, return the path with status code = 200
+        return Response(headers=[("Content-Type", "json/application")],
+                        response=json.dumps({"lineGraph"  : filename,
                                              "searchTerm" : session['search_term']}),
                         status=200)
     search_thread = SEARCHES[session['id']]
