@@ -27,7 +27,7 @@
 15. mapproj
 16. ggmap
 
-# Install following library to run Python
+## Install following library to run Python
 1. Flask
 
 # Run application natively in local environment
