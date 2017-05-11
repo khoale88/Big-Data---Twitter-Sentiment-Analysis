@@ -5,9 +5,10 @@
 4. Use the credentials in R script to connect to twitter api and access Tweets
 5. Create file "twitter_token.csv" inside rscript folder with 4 headers: "api_key", "api_secret", "access_token", "access_token_secret" and their values
 
-#Dependency
+# Dependency
 1. r-base:3.4
 2. python:2.7
+
 ## Install following packages to successfully run R script 
 1. twitteR 
 2. methods
