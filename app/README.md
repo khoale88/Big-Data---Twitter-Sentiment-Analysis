@@ -1,2 +1,0 @@
-# Dependency
-Python python-Fask
